@@ -1,0 +1,230 @@
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
+apply plugin: 'com.google.firebase.crashlytics'
+apply plugin: 'com.google.gms.google-services'
+
+android {
+    compileSdkVersion Versions.compileSdk
+    buildToolsVersion Versions.buildToolsVersion
+
+    packagingOptions {
+        exclude 'META-INF/DEPENDENCIES'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/license.txt'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/NOTICE.txt'
+        exclude 'META-INF/notice.txt'
+        exclude 'META-INF/ASL2.0'
+        exclude"META-INF/*.kotlin_module"
+    }
+
+    defaultConfig {
+        applicationId ApplicationId.id
+        minSdkVersion Versions.minSdk
+        targetSdkVersion Versions.targetSdk
+        versionCode Releases.versionCode
+        versionName Releases.versionName
+        multiDexEnabled true
+        vectorDrawables.useSupportLibrary = true
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+    }
+
+
+    buildTypes {
+        applicationVariants.all { variant ->
+            variant.outputs.all {
+                def flavor = variant.name
+                def versionName = variant.versionName
+                outputFileName = "$ApkFormat.prefix${flavor}_${versionName}.apk"
+            }
+        }
+        lintOptions {
+            abortOnError false
+            checkReleaseBuilds false
+        }
+        release {
+            minifyEnabled false
+            debuggable false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+
+        debug {
+            debuggable true
+            minifyEnabled false
+        }
+
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
+    }
+
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_1_8
+    }
+}
+
+dependencies {
+
+    implementation fileTree(dir: "libs", include: ["*.jar"])
+
+
+    // Dependency on a local library module
+//    implementation project(Modules.core)
+//    implementation project(Modules.network)
+//    implementation project(Modules.presentation)
+
+
+    // Android support
+    implementation Androidx.appcompat
+    implementation Androidx.recyclerview
+    implementation Androidx.constraintlayout
+    implementation Androidx.material_design
+    implementation Androidx.legacysupport
+    implementation Androidx.ktx
+    implementation Androidx.cardview
+    implementation Androidx.coroutines
+    implementation Androidx.coroutines_android
+    implementation Androidx.swipeRefresh
+
+    //ktx
+    implementation Androidx.liveDataKtx
+    implementation Androidx.lifeCycleKtx
+    implementation Androidx.fragmentKtx
+    implementation Androidx.fragmentKtx
+    implementation Androidx.activityKtx
+
+
+    // Testing
+    testImplementation Testing.junit
+    testImplementation Testing.mock_core
+    androidTestImplementation Testing.test_runner
+    androidTestImplementation Testing.espresso_core
+
+    // Multidex
+    implementation Androidx.mulidex
+
+
+    //Google libraries
+    implementation Googlelibraries.maps
+    implementation Googlelibraries.location
+    implementation Googlelibraries.map_utills_ktx //Google map utills ktx
+    implementation Googlelibraries.play_services_base
+
+    // Life cycle
+    implementation Lifecycle.extensions
+    kapt Lifecycle.compiler
+
+    // Room
+    implementation Room.runtime
+    implementation Room.room_rxjava
+    kapt Room.compiler
+
+    // OkHttp and Retrofit
+    implementation Okhttp.runtime
+    implementation Okhttp.logging
+    implementation Retrofit.runtime
+    implementation Retrofit.rxjava2
+    implementation Retrofit.gsonConverter
+
+    // RxJava and RxAndroid
+    implementation Reactivex.rxjava
+    implementation Reactivex.rxkotlin
+
+    // Stetho for network debugging
+    implementation Stetho.runtime
+    implementation Stetho.okhttp
+
+
+    //Koin for DI
+    implementation Koin.android
+    implementation Koin.viewmodel
+    implementation Koin.scope
+    implementation Koin.ext
+
+    //coil image loading lib
+    implementation Externallib.coilImageLoader
+
+    //OTP edi text field
+    implementation Externallib.pinEntryEditText
+
+    //Country Code Picker
+    implementation Externallib.countryCodePicker
+
+    //Drawer layout behaviour
+    implementation Externallib.drawerLayoutBehavior
+
+    //Lottie animations
+    implementation Externallib.lottieAnimations
+
+    //Firebase
+    implementation Firebaselibraries.analytics
+    implementation Firebaselibraries.crashlytics
+    implementation Firebaselibraries.messaging
+    implementation Firebaselibraries.database
+    implementation Firebaselibraries.firestore_database
+    implementation Firebaselibraries.auth
+    implementation platform(Firebaselibraries.firebaseBom)
+
+    //Rounded Image View
+    implementation Externallib.roundedImageView
+
+    //Rounded Spin kit View
+    implementation Externallib.spinKitView
+
+    //Circular Music Progressbar
+    implementation Externallib.circularMusicProgressbar
+
+    //Circular progress indicator
+    implementation Externallib.circularProgressIndicator
+
+    //Permission Dispatcher
+    implementation Externallib.permissionDispatcher
+    kapt Externallib.permissionDispatcherProcessor
+
+    // OTP View
+    implementation Externallib.otpView
+
+    //Trail Google Map
+    implementation Externallib.trailView
+
+    //Circular image view
+    implementation Externallib.circularImageView
+
+
+
+//adding ratingbar library
+    implementation 'com.github.ome450901:simpleratingbar:1.5.1'
+
+
+    //Kotlin
+    modules {
+        module("org.jetbrains.kotlin:kotlin-stdlib-jdk7") {
+            replacedBy("org.jetbrains.kotlin:kotlin-stdlib", "kotlin-stdlib-jdk7 is now part of kotlin-stdlib")
+        }
+        module("org.jetbrains.kotlin:kotlin-stdlib-jdk8") {
+            replacedBy("org.jetbrains.kotlin:kotlin-stdlib", "kotlin-stdlib-jdk8 is now part of kotlin-stdlib")
+        }
+    }
+
+    //Fix issue - Recommended action: Use a different version of dependency 'androidx.core:core:1.12.0-alpha01',
+    implementation('androidx.core:core') {
+        version {
+            strictly '1.8.0'
+        }
+    }
+
+    implementation('androidx.core:core-ktx') {
+        version {
+            strictly '1.8.0'
+        }
+    }
+
+
+
+
+}
